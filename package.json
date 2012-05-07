@@ -1,0 +1,8 @@
+{
+  "name": "convoy-stylus",
+  "version": "0.1.0",
+  "dependencies": {
+    "stylus": "0.26.1",
+    "coffee-script": "1.3.1"
+  }
+}
