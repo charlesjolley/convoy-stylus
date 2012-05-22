@@ -67,9 +67,12 @@ class Evaluator extends STYLUS.Evaluator
     @importStack.push found
     STYLUS.nodes.filename = found;
 
-    # hack to make sure path ends up in watch
+    # make sure path ends up in watch & mtime are updated for caching
     body = FS.readFileSync found, 'utf8'
     packager.watchPath found
+    foundMtime = FS.statSync(found).mtime
+    if @options?.asset
+      @options.asset.mtime = Math.max(foundMtime, @options.asset.mtime)
 
     if literal
       block = new STYLUS.nodes.Literal body
@@ -106,11 +109,14 @@ StylusCompiler = (asset, packager, done) ->
   FS.readFile asset.path, 'utf8', (err, body) ->
     return done(err) if err
 
+    asset.mtime = FS.statSync(asset.path).mtime
+
     # taken from the Stylus.render() method
     options =
       packager:   packager
       sourcePath: asset.path
       includeCSS: @includeCSS != false
+      asset:      asset
 
     parser = new Parser body, options
 
