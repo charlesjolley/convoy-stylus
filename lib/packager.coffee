@@ -146,6 +146,6 @@ module.exports = convoy.packager
     '.styl': StylusCompiler
 
   analyzer: convoy.plugins.GenericAnalyzer
-  linker: convoy.plugins.SimpleMergeLinker
-  minifier: null # TODO: CSS minifier
+  linker: convoy.plugins.CSSLinker
+  minifier: convoy.plugins.UglifyCSSMinifier
 
