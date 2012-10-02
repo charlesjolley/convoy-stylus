@@ -2,6 +2,7 @@ convoy = require 'convoy'
 STYLUS = require 'stylus'
 FS     = require 'fs'
 PATH   = require 'path'
+JOIN   = PATH.join
 
 Parser     = STYLUS.Parser
 Normalizer = require 'stylus/lib/visitor/normalizer'
@@ -117,6 +118,7 @@ StylusCompiler = (asset, packager, done) ->
       sourcePath: asset.path
       includeCSS: @includeCSS != false
       asset:      asset
+      imports:    [JOIN(__dirname, '..', 'node_modules', 'stylus', 'lib', 'functions')]
 
     parser = new Parser body, options
 
@@ -144,6 +146,6 @@ module.exports = convoy.packager
     '.styl': StylusCompiler
 
   analyzer: convoy.plugins.GenericAnalyzer
-  linker: convoy.plugins.SimpleMergeLinker
-  minifier: null # TODO: CSS minifier
+  linker: convoy.plugins.CSSLinker
+  minifier: convoy.plugins.UglifyCSSMinifier
 
